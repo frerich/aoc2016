@@ -13,13 +13,13 @@ defmodule Day19 do
   end
 
   def part_two do
-    # [1] -> [1]
-    # [1,2] -> [1] -> [1]
-    # [1,2,3] -> [3,1] -> [3]
-    # [1,2,3,4] -> [2,4,1] -> [1,2] -> [1]
-    # [1,2,3,4,5] -> [2,4,5,1] -> [4,1,2] -> [2,4] -> [2]
-    # [1,2,3,4,5,6] -> [2,3,5,6,1] -> [3,6,1,2] -> [6,2,3] -> [3,6] -> [3]
-    IO.puts(take(Enum.to_list(1..6), 6))
+    # All group sizes of elves in which elf #1 gets all the presents.
+    lengths_with_winner_1 = Stream.iterate(2, fn x -> x * 3 - 2 end)
+
+    # Largest group size which is lower than the puzzle input
+    start = Enum.take_while(lengths_with_winner_1, & &1 < 3004953) |> List.last()
+
+    IO.puts(3004953 - start + 1)
   end
 
   def step([elf]), do: elf
@@ -31,19 +31,8 @@ defmodule Day19 do
       step(Enum.take_every(Enum.drop(elves, 2), 2))
     end
   end
-
-  def take([elf] = elves, _count) do
-    dbg(elves)
-    elf
-  end
-
-  def take(elves, count) do
-    dbg(elves)
-    [elf | elves] = List.delete_at(elves, div(count, 2))
-    take(elves ++ [elf], count - 1)
-  end
 end
 
 Day19.part_one()
-#Day19.part_two()
+Day19.part_two()
 
